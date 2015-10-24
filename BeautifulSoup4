@@ -1,0 +1,243 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Web Scraping"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Beautiful Soup"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "BS is a Python library pulling data from HTML and XML files.\n",
+    "It works with your own custom parsers to navigate throught the parse tree."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "html_doc = \"\"\"\n",
+    "<html><head><title>The Dormouse's story</title></head>\n",
+    "<body>\n",
+    "<p class=\"title\"><b>The Dormouse's story</b></p>\n",
+    "\n",
+    "<p class=\"story\">Once upon a time there were three little sisters; and their names were\n",
+    "<a href=\"http://example.com/elsie\" class=\"sister\" id=\"link1\">Elsie</a>,\n",
+    "<a href=\"http://example.com/lacie\" class=\"sister\" id=\"link2\">Lacie</a> and\n",
+    "<a href=\"http://example.com/tillie\" class=\"sister\" id=\"link3\">Tillie</a>;\n",
+    "and they lived at the bottom of a well.</p>\n",
+    "\n",
+    "<p class=\"story\">...</p>\n",
+    "\"\"\" # Transform The HTML Code Into A String Variable"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<html>\n",
+      " <head>\n",
+      "  <title>\n",
+      "   The Dormouse's story\n",
+      "  </title>\n",
+      " </head>\n",
+      " <body>\n",
+      "  <p class=\"title\">\n",
+      "   <b>\n",
+      "    The Dormouse's story\n",
+      "   </b>\n",
+      "  </p>\n",
+      "  <p class=\"story\">\n",
+      "   Once upon a time there were three little sisters; and their names were\n",
+      "   <a class=\"sister\" href=\"http://example.com/elsie\" id=\"link1\">\n",
+      "    Elsie\n",
+      "   </a>\n",
+      "   ,\n",
+      "   <a class=\"sister\" href=\"http://example.com/lacie\" id=\"link2\">\n",
+      "    Lacie\n",
+      "   </a>\n",
+      "   and\n",
+      "   <a class=\"sister\" href=\"http://example.com/tillie\" id=\"link3\">\n",
+      "    Tillie\n",
+      "   </a>\n",
+      "   ;\n",
+      "and they lived at the bottom of a well.\n",
+      "  </p>\n",
+      "  <p class=\"story\">\n",
+      "   ...\n",
+      "  </p>\n",
+      " </body>\n",
+      "</html>\n"
+     ]
+    }
+   ],
+   "source": [
+    "from bs4 import BeautifulSoup # Import Beautiful Soup 4\n",
+    "soup = BeautifulSoup(html_doc, 'html.parser')\n",
+    "\n",
+    "print(soup.prettify()) # Make The HTML Code \"Prettier\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "u\"The Dormouse's story\""
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "soup.title.string # Extract The Title"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "The Dormouse's story\n",
+      "\n",
+      "The Dormouse's story\n",
+      "Once upon a time there were three little sisters; and their names were\n",
+      "Elsie,\n",
+      "Lacie and\n",
+      "Tillie;\n",
+      "and they lived at the bottom of a well.\n",
+      "...\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(soup.get_text()) # Extract The Text Only"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[<a class=\"sister\" href=\"http://example.com/elsie\" id=\"link1\">Elsie</a>,\n",
+       " <a class=\"sister\" href=\"http://example.com/lacie\" id=\"link2\">Lacie</a>,\n",
+       " <a class=\"sister\" href=\"http://example.com/tillie\" id=\"link3\">Tillie</a>]"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "soup.find_all('a') # Get All The URL Links"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "http://example.com/elsie\n",
+      "http://example.com/lacie\n",
+      "http://example.com/tillie\n"
+     ]
+    }
+   ],
+   "source": [
+    "for link in soup.find_all('a'): # Loop To Only Extract The URL\n",
+    "    print(link.get('href'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Elsie\n",
+      "Lacie\n",
+      "Tillie\n"
+     ]
+    }
+   ],
+   "source": [
+    "for link in soup.find_all('a'): # Loop To Only Extract The Names\n",
+    "    print(link.get_text())"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}
